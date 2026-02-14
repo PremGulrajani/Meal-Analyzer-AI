@@ -1,0 +1,7 @@
+fastapi==0.115.6
+uvicorn[standard]==0.30.6
+python-multipart==0.0.9
+google-cloud-aiplatform==1.71.1
+google-cloud-speech==2.26.1
+google-cloud-firestore==2.16.1
+requests==2.32.3
