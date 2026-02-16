@@ -1,5 +1,7 @@
 import datetime
 from google.cloud import firestore
+import hashlib
+
 
 db = firestore.Client()
 
@@ -26,3 +28,27 @@ def get_state(user_id: str):
 
 def save_state(user_id: str, state: dict):
     get_doc(user_id).set(state, merge=True)
+
+def _normalize_meal_text(meal_text: str) -> str:
+    return " ".join((meal_text or "").strip().lower().split())
+
+def _food_cache_doc(meal_text: str):
+    key = hashlib.sha1(_normalize_meal_text(meal_text).encode("utf-8")).hexdigest()
+    return db.collection("food_cache").document(key)
+
+def get_food_cache(meal_text: str):
+    snap = _food_cache_doc(meal_text).get()
+    if not snap.exists:
+        return None
+    d = snap.to_dict() or {}
+    return d.get("tool_data")
+
+def set_food_cache(meal_text: str, tool_data: dict):
+    _food_cache_doc(meal_text).set(
+        {
+            "meal_text": _normalize_meal_text(meal_text),
+            "tool_data": tool_data,
+            "updated_at": firestore.SERVER_TIMESTAMP,
+        },
+        merge=True,
+    )

@@ -7,7 +7,7 @@ from google.cloud import speech
 
 from .models import ChatRequest, SetGoalsRequest
 from .security import require_auth, sanitize_user_text, rate_limit_or_raise
-from .store import get_state, save_state
+from .store import get_state, save_state, get_food_cache, set_food_cache
 from .llm import call_gemini, try_parse_json
 from .config import USDA_API_KEY
 from .tools.local import local_lookup
@@ -88,31 +88,47 @@ def chat(req: ChatRequest, request: Request):
     goals = state["goals"]
     consumed = state["consumed"]
 
-    # Tool selection: always TRY USDA if available; else local.
-    tool_used = "local"
+        # Tool selection: always TRY USDA if available; else local.
+    tool_used = "local_seed"
     tool_debug = {}
     tool_data = None
 
-    if USDA_API_KEY:
-        s = usda_search(meal)
-        tool_debug["usda_search_ok"] = bool(s.get("ok"))
-        tool_debug["usda_results_count"] = len(s.get("results", [])) if s.get("ok") else 0
+    # 1) Fast path: Firestore cache (previous verified lookups)
+    cached = get_food_cache(meal)
+    if cached:
+        tool_used = "firestore_cache"
+        tool_data = cached
+        tool_debug["cache_hit"] = True
+    else:
+        tool_debug["cache_hit"] = False
 
-        if s.get("ok") and s.get("results"):
-            first = s["results"][0]
-            tool_debug["usda_choice"] = first.get("description")
-            d = usda_details(first["fdcId"])
-            if d.get("ok"):
-                tool_used = "usda"
-                tool_data = d
+        # 2) Verified lookup: USDA FoodData Central (if API key configured)
+        if USDA_API_KEY:
+            s = usda_search(meal)
+            tool_debug["usda_search_ok"] = bool(s.get("ok"))
+            tool_debug["usda_results_count"] = len(s.get("results", [])) if s.get("ok") else 0
+
+            if s.get("ok") and s.get("results"):
+                first = s["results"][0]
+                tool_debug["usda_choice"] = first.get("description")
+                d = usda_details(first["fdcId"])
+                if d.get("ok"):
+                    tool_used = "usda"
+                    tool_data = d
+
+                    # Store verified result to cache for next time
+                    set_food_cache(meal, d)
+                else:
+                    # 3) Offline seed fallback (small local JSON list)
+                    tool_used = "local_seed"
+                    tool_data = local_lookup(meal)
             else:
-                tool_used = "local_fallback"
+                tool_used = "local_seed"
                 tool_data = local_lookup(meal)
         else:
-            tool_used = "local_fallback"
+            # No USDA key configured (demo/offline)
+            tool_used = "local_seed"
             tool_data = local_lookup(meal)
-    else:
-        tool_data = local_lookup(meal)
 
     prompt = f"""
 You are a nutrition assistant for a high-protein lifter.

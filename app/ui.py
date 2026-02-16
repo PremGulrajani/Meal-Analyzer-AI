@@ -30,21 +30,21 @@ def build_ui_html() -> str:
     .banner { padding: 10px 12px; border-radius: 10px; margin-bottom: 10px; font-size: 13px; border: 1px solid #ddd; }
     .banner-green { background: #e9f7ef; border-color: #b7e3c6; color: #135b2b; }
     .banner-yellow { background: #fff7e6; border-color: #ffe2a8; color: #6a4a00; }
+    .banner-blue {background: #e8f0fe; border-color: #c6dafc; color: #1a3d8f;    }
     .badge { display:inline-block; padding:2px 8px; border-radius:999px; border:1px solid #ddd; font-size:12px; }
   </style>
 </head>
 <body>
   <h2>MealAnalyzer AI - Prem's Nutritional Coach</h2>
   <div class="muted">
-    Voice → Speech-to-Text → Tool lookup (USDA/local) → Gemini reasoning → Firestore daily totals
-    <span class="pill">Demo mode: __DEMO__</span>
+    Voice → Speech-to-Text → Firestore Cache → USDA FoodData API → Gemini Macro Reasoning → Firestore (State + Cache)
     <span class="pill">USDA: __USDA__</span>
   </div>
 
   <div class="row" style="margin-top:14px;">
     <div class="card" style="flex: 1 1 520px;">
       <h3>Meal input</h3>
-      <textarea id="msg">Please type or speak!</textarea>
+<textarea id="msg" placeholder="Describe your meal (e.g., 4 oz chicken breast and 1 cup rice)"></textarea>
       <div class="row" style="margin-top:10px;">
         <button onclick="recordVoice()">Record Voice (4s)</button>
         <button class="primary" onclick="analyze()">Analyze</button>
@@ -89,13 +89,25 @@ def build_ui_html() -> str:
 
   function sourceBanner(toolUsed){
     const t = (toolUsed || "gemini").toLowerCase();
+
+    if (t.includes("firestore")) {
+      return {
+        cls: "banner banner-blue",
+        text: "Data source: Previously entered meals (Firestore) + Gemini (reasoning)"
+      };
+    }
+
     if (t.includes("usda")) {
-      return { cls: "banner banner-green", text: "Data source: USDA (verified lookup) + Gemini (reasoning)" };
+      return {
+        cls: "banner banner-green",
+        text: "Data source: USDA FoodData Central API (verified) + Gemini (reasoning)"
+      };
     }
-    if (t.includes("local")) {
-      return { cls: "banner banner-yellow", text: "Data source: Local lookup (approx) + Gemini (reasoning)" };
-    }
-    return { cls: "banner banner-yellow", text: "Data source: Gemini approximation (no external lookup)" };
+
+    return {
+      cls: "banner banner-yellow",
+      text: "Data source: Gemini estimation (no verified match)"
+    };
   }
 
   function renderPretty(data){
