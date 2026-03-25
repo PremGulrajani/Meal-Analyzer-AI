@@ -2,11 +2,11 @@ Meal Analyzer AI - Prem’s Cloud Deployed AI Nutritional Assistant
 
 Meal Analyzer AI is a cloud-native nutrition assistant capable of delivering structured, reliable nutritional data, offering contextual dietary guidance, and helping me strategically plan my meals throughout the day to meet my fitness goals.
 
-**\\ Architecture //**
+** \\ Architecture // **
 
 <img width="727" height="527" alt="image" src="https://github.com/user-attachments/assets/15d5c2d2-0cd1-4ee7-9322-930070b78d92" />
 
-**\\ Cloud Services Used //**
+** \\ Cloud Services Used // **
 
 1. Google Cloud Run (Compute)
 2. Vertex AI Gemini 2.0 Flash Lite (AI Reasoning)
