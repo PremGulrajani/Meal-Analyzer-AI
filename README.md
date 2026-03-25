@@ -1,4 +1,4 @@
-<img width="727" height="527" alt="image" src="https://github.com/user-attachments/assets/02ebcc68-aa92-43af-b4b4-477bf21130da" />Meal Analyzer AI - An an AI Personalized Nutritional Coach
+Meal Analyzer AI - Prem’s Cloud Deployed AI Nutritional Assistant
 
 Meal Analyzer AI is a cloud-native nutrition assistant capable of delivering structured, reliable nutritional data, offering contextual dietary guidance, and helping me strategically plan my meals throughout the day to meet my fitness goals.
 
