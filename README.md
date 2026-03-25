@@ -5,26 +5,37 @@ Meal Analyzer AI is a cloud-native nutrition assistant capable of delivering str
 **// Architecture //**
 
 User (Client) Layer: Facilitates the mult-modal interaction through browser-based interface. 
+
 Text & Voice Input: Users can enter meal descriptions via text or record a 4-second audio clip.
+
 Speech-to-Text Integration: Audio clips are sent to the Cloud Speech-to-Text API, which transcribes the recording into sanitized text before analysis processing. 
+
 Application Layer (Cloud Run: FastAPI Backend Service + Web UI): Acts as the central orchestrator, manages the data flow between the user and external services
+
 Monolithic Serving: To reduce deployment complexity, the FastAPI backend directly serves the HTML/JavaScript Web UI via the /ui route. 
+
 Containerized FastAPI Backend: Services and exposes API endpoints (e.g., /chat, /transcribe, /set_goals, /reset_meals).
+
 Security and Data Governance: The backend implements security controls, including input sanitization and secure API management.
+
 Managed Services / External APIs: The intelligence and persistence of the agent that utilizes external tools to accomplish the task.
+
 Vertex AI (Gemini Agent): The “brain” of the system uses the gemini-2.0-flash-lite model. It operates in two stages:
-Decides if external tools (USDA API) are needed
-Reasoning, response generation, and agentic behavior.
+Decides if external tools (USDA API) are needed Reasoning, response generation, and agentic behavior.
+
 Cloud Firestore: Serves a dual purpose as both the State Store and Food Cache. It persists user-specific daily macronutrient and caloric goals, and caches previous USDA lookups using SHA1 hashes to minimize external API latency and costs.  
 USDA FoodData REST API: Provides the ground-truth nutritional data for concrete food items identified by the Gemini Agent.
 
 **// Cloud Services Used //**
+
 Google Cloud Run (Compute)
 Role: Serves as the primary hosting environment for the Python FastAPI backend and Web UI in a container.
 Reasoning: Cloud Run provides a fully managed serverless environment that  provides auto-scaling, simple deployment, and minimal operational overhead.
+
 Vertex AI Gemini 2.0 Flash Lite (AI Reasoning)
 Role: The core intelligence engine of the application
 Reasoning: The Gemini 2.0 Flash Lite model was selected for its balance of high speed inferences, and sophisticated agentic capabilities. It is specifically used for intent classification, deciding on whether to look up a food item, or provide a general estimate, and nutritional synthesis.
+
 Cloud Firestore (Data Persistence & Caching)
 Role: Acts as the systems primary NoSQL document database
 Reasoning: Firestore is critical for two data flows:
