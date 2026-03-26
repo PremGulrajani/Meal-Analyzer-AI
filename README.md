@@ -10,9 +10,6 @@ Try Meal-Analyzer-AI
 <img width="1013" height="814" alt="image" src="https://github.com/user-attachments/assets/2930b2d4-9c10-4c82-8a1d-6ce2b7951bd1" /> 
 
 
-https://meal-analyzer-649334338943.us-east1.run.app/ui
-
-
 ** \\\ Architecture // **
 
 <img width="727" height="527" alt="image" src="https://github.com/user-attachments/assets/15d5c2d2-0cd1-4ee7-9322-930070b78d92" />
