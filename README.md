@@ -5,9 +5,7 @@ MealAnalyzer AI is a cloud-based conversational nutrition assistant designed to 
 Most nutrition apps rely on manual logging and raw numbers. MealAnalyzer AI instead allows users to describe meals naturally, while AI reasoning and structured nutrition data provide contextual insights and daily tracking automatically.
 
 
-## UI / Demo
-
-[Try Meal-Analyzer-AI free here](https://meal-analyzer-649334338943.us-east1.run.app/ui)
+## UI Preview
 
 <img width="1013" height="814" alt="image" src="https://github.com/user-attachments/assets/2930b2d4-9c10-4c82-8a1d-6ce2b7951bd1" /> 
 
