@@ -5,7 +5,8 @@ Meal Analyzer AI is a cloud-native nutrition assistant capable of delivering str
 
 ** \\\  UI / Demo // **
 
-<iframe src="https://https://meal-analyzer-649334338943.us-east1.run.app/ui" width="100%" height="600"></iframe>
+[Try Meal-Analyzer-AI <img width="888" height="953" alt="Screenshot 2026-03-25 at 7 13 18 PM" src="https://github.com/user-attachments/assets/ad9bdd18-f829-4baf-a494-4b0121800379" /> ](https://meal-analyzer-649334338943.us-east1.run.app/ui)
+
 
 https://meal-analyzer-649334338943.us-east1.run.app/ui
 
