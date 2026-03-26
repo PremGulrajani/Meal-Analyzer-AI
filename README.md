@@ -1,4 +1,4 @@
-MealAnalyzer AI — Your Conversational Nutrition Coach
+MealAnalyzer AI — Prem's AI Nutritional Coach
 
 MealAnalyzer AI is a cloud-based conversational nutrition assistant designed to make tracking nutrition accurate, low-effort, and sustainable.
 
